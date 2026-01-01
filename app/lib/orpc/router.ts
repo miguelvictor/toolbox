@@ -7,7 +7,7 @@ import { orpcBase } from "./base"
 const generateImage = orpcBase
   .input(
     z.object({
-      images: z.any(),
+      images: z.string().array(),
       prompt: z.string()
     })
   )
@@ -17,13 +17,20 @@ const generateImage = orpcBase
     })
     const result = await generateText({
       model: google("gemini-2.5-flash-image-preview"),
-      prompt: input.prompt
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: input.prompt },
+            ...input.images.map((image) => ({ type: "image" as const, image }))
+          ]
+        }
+      ]
     })
-
-    console.dir(result, { depth: null })
 
     return {
       text: result.text,
+      result: result.files[0].base64,
       needsMoreInformation: result.files.length === 0
     }
   })
