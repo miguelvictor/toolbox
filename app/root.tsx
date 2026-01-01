@@ -3,6 +3,7 @@ import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration }
 import type { Route } from "./+types/root"
 
 import "./app.css"
+import { AppProviders } from "./components/app-providers"
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,7 +24,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />
+  return (
+    <AppProviders>
+      <Outlet />
+    </AppProviders>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

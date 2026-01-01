@@ -2,10 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "toolbox",
   "compatibility_date": "2025-04-04",
+  "compatibility_flags": ["nodejs_compat"],
   "main": "./workers/app.ts",
   "preview_urls": false,
   "workers_dev": false,
   "observability": { "enabled": true },
-  "placement": {  "mode": "smart" },
-  "assets": {  "directory": "./public/" },
+  "placement": { "mode": "smart" },
+  "assets": { "directory": "./public/" }
 }
