@@ -77,8 +77,9 @@ async function handleDownload(result: string) {
   const blob = await base64Response.blob()
   const file = new File([blob], `generated-image-${Date.now()}.png`, { type: "image/png" })
 
-  // Try Web Share API first (works better on mobile/iOS)
-  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+  // Try Web Share API only on mobile devices
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  if (isMobile && navigator.share && navigator.canShare?.({ files: [file] })) {
     try {
       await navigator.share({
         files: [file],
