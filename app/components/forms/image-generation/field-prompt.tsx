@@ -2,7 +2,11 @@ import { Field, FieldLabel } from "~/components/ui/field"
 import { Textarea } from "~/components/ui/textarea"
 import { usePromptAtom } from "~/lib/atoms"
 
-export function FieldPrompt() {
+interface Props {
+  isLoading: boolean
+}
+
+export function FieldPrompt({ isLoading }: Props) {
   const [prompt, setPrompt] = usePromptAtom()
 
   return (
@@ -13,6 +17,7 @@ export function FieldPrompt() {
         placeholder="Write something here"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
+        disabled={isLoading}
       />
     </Field>
   )

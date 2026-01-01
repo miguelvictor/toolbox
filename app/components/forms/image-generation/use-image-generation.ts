@@ -1,15 +1,15 @@
 import { useMutation } from "@tanstack/react-query"
 
-import { useImagesValue, usePromptValue } from "~/lib/atoms"
+import { useImagesValue, usePromptAtom } from "~/lib/atoms"
 import { orpc } from "~/lib/orpc/client"
 
 export function useImageGeneration() {
   const images = useImagesValue()
-  const prompt = usePromptValue()
+  const [prompt, setPrompt] = usePromptAtom()
   const {
-    data,
+    data: generateData,
     isPending: isGenerating,
-    mutate
+    mutate: generate
   } = useMutation({
     mutationFn: async () => {
       const imagePromises = images.map((file) => {
@@ -23,10 +23,15 @@ export function useImageGeneration() {
       return await orpc.images.generate({ images: base64Images, prompt })
     }
   })
+  const { isPending: isImprovingPrompt, mutate: improve } = useMutation({
+    mutationFn: () => orpc.images.rewrite({ prompt }),
+    onSuccess: (result) => setPrompt(result.prompt)
+  })
 
   return {
-    data,
-    generate: mutate,
-    isGenerating
+    data: generateData,
+    isLoading: isGenerating || isImprovingPrompt,
+    generate,
+    improve
   }
 }

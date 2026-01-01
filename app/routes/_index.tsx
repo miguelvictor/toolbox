@@ -11,7 +11,7 @@ import { Field, FieldGroup } from "~/components/ui/field"
 
 export default function HomePage() {
   const refInputImage = useRef<HTMLInputElement>(null)
-  const { data, isGenerating, generate } = useImageGeneration()
+  const { data, generate, improve, isLoading } = useImageGeneration()
 
   return (
     <main className="min-h-svh flex items-center justify-center p-5">
@@ -30,15 +30,21 @@ export default function HomePage() {
           >
             <FieldGroup>
               <FieldImages refInputImage={refInputImage} />
-              <FieldPrompt />
+              <FieldPrompt isLoading={isLoading} />
               <ImageGenerationResult results={data?.results ?? []} />
               <Field orientation="horizontal">
-                <Button type="submit" disabled={isGenerating} size="lg">
+                <Button type="submit" disabled={isLoading} size="lg">
                   <IconSparkles2 />
-                  {isGenerating ? "Generating" : "Generate"}
+                  Generate
                 </Button>
                 <div className="flex-1"></div>
-                <Button variant="outline" type="button" disabled={isGenerating} size="lg">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => improve()}
+                  disabled={isLoading}
+                  size="lg"
+                >
                   <IconWand />
                   Rewrite
                 </Button>
@@ -46,7 +52,7 @@ export default function HomePage() {
                   variant="outline"
                   type="button"
                   onClick={() => refInputImage.current?.click()}
-                  disabled={isGenerating}
+                  disabled={isLoading}
                   size="lg"
                 >
                   <IconImageInPicture />
